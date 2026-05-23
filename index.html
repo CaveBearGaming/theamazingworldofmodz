@@ -72,10 +72,22 @@
 
 <h1>Mod Search Engine</h1>
 
-<!-- Google CSE -->
+<!-- Google CSE (opens results in new tab, no iframe widget) -->
 <div class="search-box">
-  <script async src="https://cse.google.com/cse.js?cx=d60b7b269e3484bce"></script>
-  <div class="gcse-search"></div>
+  <form action="https://cse.google.com/cse" method="GET" target="_blank">
+    <input type="hidden" name="cx" value="d60b7b269e3484bce">
+
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="Search mods..."
+      style="width:70%; padding:10px;"
+    />
+
+    <button type="submit" style="padding:10px;">
+      Search
+    </button>
+  </form>
 </div>
 
 <h2>🔥 Popular Mods (Modrinth)</h2>

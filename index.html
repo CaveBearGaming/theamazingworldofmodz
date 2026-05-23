@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mod Search Engine</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    /* Google CSE box */
+    .search-box {
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: #1c1c1c;
+      border-radius: 12px;
+      padding: 15px;
+      transition: 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: #2a2a2a;
+    }
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .desc {
+      font-size: 12px;
+      color: #aaa;
+      height: 40px;
+      overflow: hidden;
+    }
+
+    .tag {
+      font-size: 11px;
+      margin-top: 8px;
+      color: #7cc7ff;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Mod Search Engine</h1>
+
+<!-- Google CSE -->
+<div class="search-box">
+  <script async src="https://cse.google.com/cse.js?cx=d60b7b269e3484bce"></script>
+  <div class="gcse-search"></div>
+</div>
+
+<h2>🔥 Popular Mods (Modrinth)</h2>
+<div id="grid" class="grid"></div>
+
+<script>
+async function loadMods() {
+  const res = await fetch(
+    "https://api.modrinth.com/v2/search?limit=50&index=downloads"
+  );
+
+  const data = await res.json();
+  const grid = document.getElementById("grid");
+
+  data.hits.forEach(mod => {
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = `https://modrinth.com/mod/${mod.slug}`;
+    card.target = "_blank";
+
+    card.innerHTML = `
+      <div class="title">${mod.title}</div>
+      <div class="desc">${mod.description || "No description"}</div>
+      <div class="tag">⬇ ${mod.downloads.toLocaleString()} downloads</div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+loadMods();
+</script>
+
+</body>
+</html>

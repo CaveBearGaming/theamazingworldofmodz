@@ -14,31 +14,20 @@
     }
 
     header {
-      padding: 20px;
       text-align: center;
+      padding: 20px;
     }
 
-    h1 {
-      margin-bottom: 10px;
-    }
+    h1 { margin: 0; }
 
-    /* Search bar */
-    .search-container {
+    /* Search area */
+    .search-box {
       display: flex;
       justify-content: center;
-      margin: 10px;
+      margin: 20px;
     }
 
-    input {
-      width: 60%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-    }
-
-    /* Results grid */
+    /* Mod grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -78,6 +67,23 @@
       margin-top: 8px;
       color: #7cc7ff;
     }
+
+    /* Make Google CSE minimal */
+    .gsc-control-cse {
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .gsc-search-button,
+    .gsc-resultsHeader,
+    .gsc-refinementBlock {
+      display: none !important;
+    }
+
+    input.gsc-input {
+      border-radius: 10px !important;
+      padding: 10px !important;
+    }
   </style>
 </head>
 
@@ -88,79 +94,47 @@
   <p>“9Minecraft if it was actually good”</p>
 </header>
 
-<!-- SEARCH -->
-<div class="search-container">
-  <input id="search" placeholder="Search mods (Modrinth)..." />
+<!-- GOOGLE SEARCH (restored, not iframe-like) -->
+<div class="search-box">
+  <script async src="https://cse.google.com/cse.js?cx=d60b7b269e3484bce"></script>
+
+  <div class="gcse-search"
+       data-newWindow="true"
+       data-refinementStyle="hidden"
+       data-enableAutoComplete="false">
+  </div>
 </div>
 
-<!-- RESULTS -->
-<div id="results" class="grid"></div>
+<h2 style="text-align:center;">🔥 Popular Mods</h2>
+<div id="grid" class="grid"></div>
 
 <script>
-const resultsDiv = document.getElementById("results");
-const searchBox = document.getElementById("search");
-
-// 🔍 LIVE SEARCH
-async function searchMods(query) {
-  if (!query) return;
-
-  const res = await fetch(
-    `https://api.modrinth.com/v2/search?query=${encodeURIComponent(query)}&limit=24`
-  );
-
-  const data = await res.json();
-  render(data.hits);
-}
-
-// 🧱 POPULAR MODS (TOP 50)
-async function loadPopular() {
+async function loadMods() {
   const res = await fetch(
     "https://api.modrinth.com/v2/search?limit=50&index=downloads"
   );
 
   const data = await res.json();
-  render(data.hits);
-}
+  const grid = document.getElementById("grid");
 
-// 🖼️ RENDER CARDS
-function render(mods) {
-  resultsDiv.innerHTML = "";
+  data.hits.forEach(mod => {
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = `https://modrinth.com/mod/${mod.slug}`;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
 
-  mods.forEach(mod => {
-    const a = document.createElement("a");
-    a.className = "card";
-    a.href = `https://modrinth.com/mod/${mod.slug}`;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-
-    a.innerHTML = `
+    card.innerHTML = `
       <div class="title">${mod.title}</div>
       <div class="desc">${mod.description || "No description"}</div>
       <div class="tag">⬇ ${mod.downloads.toLocaleString()} downloads</div>
     `;
 
-    resultsDiv.appendChild(a);
+    grid.appendChild(card);
   });
 }
 
-// ⌨️ SEARCH INPUT
-let timeout;
-searchBox.addEventListener("input", (e) => {
-  clearTimeout(timeout);
-
-  timeout = setTimeout(() => {
-    const q = e.target.value.trim();
-
-    if (q.length === 0) {
-      loadPopular();
-    } else {
-      searchMods(q);
-    }
-  }, 250);
-});
-
-// INIT
-loadPopular();
+loadMods();
 </script>
 
 </body>

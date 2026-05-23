@@ -7,41 +7,39 @@
 
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
       background: #0f0f0f;
       color: white;
-    }
-
-    header {
-      text-align: center;
+      margin: 0;
       padding: 20px;
     }
 
-    h1 { margin: 0; }
-
-    /* Search area */
-    .search-box {
-      display: flex;
-      justify-content: center;
-      margin: 20px;
+    h1 {
+      text-align: center;
     }
 
-    /* Mod grid */
+    /* Google CSE box */
+    .search-box {
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    /* Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 15px;
-      padding: 20px;
+      margin-top: 30px;
     }
 
     .card {
       background: #1c1c1c;
-      padding: 15px;
       border-radius: 12px;
+      padding: 15px;
+      transition: 0.2s;
+      cursor: pointer;
       text-decoration: none;
       color: white;
-      transition: 0.2s;
       display: block;
     }
 
@@ -52,7 +50,7 @@
 
     .title {
       font-weight: bold;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .desc {
@@ -67,45 +65,20 @@
       margin-top: 8px;
       color: #7cc7ff;
     }
-
-    /* Make Google CSE minimal */
-    .gsc-control-cse {
-      background: transparent !important;
-      border: none !important;
-    }
-
-    .gsc-search-button,
-    .gsc-resultsHeader,
-    .gsc-refinementBlock {
-      display: none !important;
-    }
-
-    input.gsc-input {
-      border-radius: 10px !important;
-      padding: 10px !important;
-    }
   </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Mod Search Engine</h1>
-  <p>“9Minecraft if it was actually good”</p>
-</header>
+<h1>Mod Search Engine</h1>
 
-<!-- GOOGLE SEARCH (restored, not iframe-like) -->
+<!-- Google CSE -->
 <div class="search-box">
   <script async src="https://cse.google.com/cse.js?cx=d60b7b269e3484bce"></script>
-
-  <div class="gcse-search"
-       data-newWindow="true"
-       data-refinementStyle="hidden"
-       data-enableAutoComplete="false">
-  </div>
+  <div class="gcse-search"></div>
 </div>
 
-<h2 style="text-align:center;">🔥 Popular Mods</h2>
+<h2>🔥 Popular Mods (Modrinth)</h2>
 <div id="grid" class="grid"></div>
 
 <script>
@@ -122,7 +95,6 @@ async function loadMods() {
     card.className = "card";
     card.href = `https://modrinth.com/mod/${mod.slug}`;
     card.target = "_blank";
-    card.rel = "noopener noreferrer";
 
     card.innerHTML = `
       <div class="title">${mod.title}</div>
